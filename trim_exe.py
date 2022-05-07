@@ -6,7 +6,7 @@ import os
 
 from qtyaml import PushButton, Label, ToggleButton
 
-class VideoThread(QThread):
+class CVThread(QThread):
 
     def __init__(self, image, width, height):
         super().__init__()
@@ -158,7 +158,7 @@ class Window(QMainWindow):
                     self.width_edit.setEnabled(False)
                     self.height_edit.setEnabled(False)
 
-                    self.thread = VideoThread(self.selected_image, self.width, self.height)
+                    self.thread = CVThread(self.selected_image, self.width, self.height)
                     self.thread_active = True
                     self.thread.run()
             case False:
