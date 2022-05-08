@@ -155,6 +155,7 @@ class Window(QMainWindow):
                     self.width = int(self.width_edit.text()) if self.width_edit.text().isdigit() else 200
                     self.height = int(self.height_edit.text()) if self.width_edit.text().isdigit() else 200
 
+                    self.button1.setEnabled(False)
                     self.width_edit.setEnabled(False)
                     self.height_edit.setEnabled(False)
 
@@ -165,6 +166,7 @@ class Window(QMainWindow):
                 if self.thread_active:
                     self.thread.stop()
                     self.thread_active = False
+                self.button1.setEnabled(True)
                 self.width_edit.setEnabled(True)
                 self.height_edit.setEnabled(True)
 
