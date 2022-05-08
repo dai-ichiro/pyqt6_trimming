@@ -10,7 +10,6 @@ class CVThread(QThread):
 
     def __init__(self, image, width, height):
         super().__init__()
-
         self.active = True
         self.drawing = False
         self.ix = 30
@@ -85,7 +84,6 @@ class Window(QMainWindow):
         self.selected_image = None
         self.width = 200
         self.height =200
-        self.thread_active = False
         self.initUI()
 
     def initUI(self):
@@ -99,6 +97,7 @@ class Window(QMainWindow):
 
         self.toggle = ToggleButton(height=50)
         self.toggle.clicked.connect(self.toggle_clicked)
+        self.toggle.setEnabled(False)
 
         self.width_label = Label('settings.yml', 'width_label')
         self.height_label = Label('settings.yml', 'height_label')
@@ -135,6 +134,8 @@ class Window(QMainWindow):
 
         # fname[0]は選択したファイルのパス（ファイル名を含む）
         if fname[0]:
+
+            self.toggle.setEnabled(True)
             
             self.selected_image = cv2.imread(fname[0])
             height ,width = self.selected_image.shape[0:2]
@@ -149,23 +150,18 @@ class Window(QMainWindow):
     def toggle_clicked(self, on_off):
         match on_off:
             case True:
-                if self.selected_image is None:
-                    self.toggle.pushToggle()
-                else:
-                    self.width = int(self.width_edit.text()) if self.width_edit.text().isdigit() else 200
-                    self.height = int(self.height_edit.text()) if self.width_edit.text().isdigit() else 200
+                self.width = int(self.width_edit.text()) if self.width_edit.text().isdigit() else 200
+                self.height = int(self.height_edit.text()) if self.width_edit.text().isdigit() else 200
 
-                    self.button1.setEnabled(False)
-                    self.width_edit.setEnabled(False)
-                    self.height_edit.setEnabled(False)
+                self.button1.setEnabled(False)
+                self.width_edit.setEnabled(False)
+                self.height_edit.setEnabled(False)
 
-                    self.thread = CVThread(self.selected_image, self.width, self.height)
-                    self.thread_active = True
-                    self.thread.run()
+                self.thread = CVThread(self.selected_image, self.width, self.height)
+                self.thread.run()
             case False:
-                if self.thread_active:
-                    self.thread.stop()
-                    self.thread_active = False
+                self.thread.stop()
+
                 self.button1.setEnabled(True)
                 self.width_edit.setEnabled(True)
                 self.height_edit.setEnabled(True)
